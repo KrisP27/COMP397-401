@@ -19,7 +19,7 @@ public class RandomMap : MonoBehaviour
         map = new GameObject[width, depth];
         xOffset = Random.Range(1000, 5000);
         zOffset = Random.Range(-1000, -5000);
-        BuildRandomMap();
+        //BuildRandomMap();
         BuildPerlinNoiseMap();
     }
 

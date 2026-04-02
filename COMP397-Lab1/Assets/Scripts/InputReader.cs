@@ -13,6 +13,7 @@ public class InputReader : MonoBehaviour
     private Vector3 velocity;
     [SerializeField] private float rotationSpeed = 10.0f;
     [SerializeField] private float mouseSensY = 8.0f;
+    [SerializeField] private float mobileScale = 10.0f;
     private float camXRotation;
     [SerializeField, Self] private CharacterController controller;
     [SerializeField, Child] private Camera cam;
@@ -28,8 +29,10 @@ public class InputReader : MonoBehaviour
         look = InputSystem.actions.FindAction("Player/Look");
         jump = InputSystem.actions.FindAction("Player/Jump");
         jump.started += Jump;
+#if !UNITY_ANDROID
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+#endif
     }
 
     private void OnDisable()
@@ -54,11 +57,14 @@ public class InputReader : MonoBehaviour
         movement += velocity;
         controller.Move(movement);
 
-        //Rotation of the player
-        transform.Rotate(Vector3.up, readLook.x * rotationSpeed * Time.deltaTime);
 
-        //Rotate the Camera
+#if UNITY_ANDROID
+        transform.Rotate(Vector3.up, readLook.x * rotationSpeed * mobileScale * Time.deltaTime);
+        camXRotation += mouseSensY * readLook.y * Time.deltaTime * rotationSpeed * -1;
+#else
+        transform.Rotate(Vector3.up, readLook.x * rotationSpeed * Time.deltaTime);
         camXRotation += mouseSensY * readLook.y * Time.deltaTime * -1;
+#endif
         camXRotation = Mathf.Clamp(camXRotation, -90f, 90f);
         cam.gameObject.transform.localRotation = Quaternion.Euler(camXRotation, 0, 0);
     }
