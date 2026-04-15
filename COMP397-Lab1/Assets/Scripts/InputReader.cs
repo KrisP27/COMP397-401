@@ -43,6 +43,7 @@ public class InputReader : MonoBehaviour
     private void Jump(InputAction.CallbackContext context)
     {
         audioController.PlayJumpSFX();
+        EventChannelManager.Instance.voidEvent.RaiseEvent();
     }
 
     void Update()

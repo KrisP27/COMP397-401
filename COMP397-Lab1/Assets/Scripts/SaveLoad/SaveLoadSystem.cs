@@ -20,11 +20,12 @@ public class SaveLoadSystem : PersistentSingleton<SaveLoadSystem>
     public void LoadGame(string gameName)
     {
         gameData = dataService.Load(gameName);
-        if (string.IsNullOrWhiteSpace(gameData.fileName))
+        if (string.IsNullOrWhiteSpace(gameData.sceneName))
         {
             gameData.sceneName = "SampleScene";
         }
 
+        EventChannelManager.instance.gameDataEvent.RaiseEvent(gameData);
         SceneManager.LoadScene(gameData.sceneName);
     }
 
